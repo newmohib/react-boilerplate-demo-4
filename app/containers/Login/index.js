@@ -11,6 +11,7 @@ import { Helmet } from 'react-helmet';
 import { FormattedMessage } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
+import Joi from '@hapi/joi';
 
 import { useInjectSaga } from 'utils/injectSaga';
 import { useInjectReducer } from 'utils/injectReducer';
@@ -24,9 +25,14 @@ import { onChangeLoginInput,loginSubmit } from './actions';
 
 
 export function Login(props) {
-  console.log('index',props.users);
+  //console.log('index',props.users);
   useInjectReducer({ key: 'login', reducer });
   useInjectSaga({ key: 'login', saga });
+
+  const schema = Joi.object({
+    username: Joi.string().required()
+   // username: Joi.number().required()
+  });
 
   const validateProperty = (input) => {
     const { name, value } = input;
@@ -41,21 +47,17 @@ export function Login(props) {
   const handleChange = (event) => {
     //console.log("namew", event.target.value, event.target.name);
     let { name, value } = event.target;
+   let resul= schema.validate({ username: value});
+   console.log("resul",resul);
     const errors = {};
-    // const errors = { ...this.state.errors };
      const loginInputObj = { ...props.loginInput };
-     console.log('index after update',loginInputObj);
-
     const errorMessage = validateProperty(event.target);
     if (errorMessage) {
       errors[name] = "Required";
     } else {
       delete errors[name];
     };
-    
-
     loginInputObj[name] = value;
-    
     props.onChangeLogin(loginInputObj);
     //  this.setState({ createPassword: createPassword, errors: errors });
   };

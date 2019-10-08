@@ -22,7 +22,7 @@ const loginReducer = (state = initialState, action) =>
         break;
 
         case LOGIN_INPUT:
-        console.log('login change: ', action.inputObj);
+        //console.log('login change: ', action.inputObj);
         draft.loginInput=action.inputObj
         break;
     }
